@@ -7,6 +7,10 @@ const app = express();
 // })
 
 app.get("/user", (req, res)=>{
+    // const{userId, password}=req.query 
+    // const params=req.params
+    // console.log(params)
+    
     res.send({Fname:"ekam", Lname:"bhatia"})
 })
 
