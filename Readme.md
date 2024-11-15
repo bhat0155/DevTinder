@@ -45,3 +45,6 @@ it will match with everything and everyone.
 
 
 - Creating an api to update user
+- use post API to sign up the user
+- create a new instance of the user model by creating dummy obj
+-once you add, do await user.save 

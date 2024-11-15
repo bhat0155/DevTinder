@@ -19,6 +19,9 @@ const userSchema = mongoose.Schema({
   gender: {
     type: String,
   },
+  password:{
+    type:String 
+  }
 });
 
 // creating a model, which is basically a class
