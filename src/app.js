@@ -1,6 +1,6 @@
 const express = require("express");
 const { validateSignUp } = require("./utils/validateSignUp");
-const bcrypt=require("bcrypt")
+const bcrypt = require("bcrypt");
 
 const app = express();
 // parse postman body
@@ -23,14 +23,35 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  // checking if user with email id exist
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error("Invalid email");
+    }
+
+    const authenticatedPw = await bcrypt.compare(password, user.password);
+    if (!authenticatedPw) {
+      throw new Error("Invalid password");
+    } else {
+      res.send("login successfull");
+    }
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
 app.post("/signup", async (req, res) => {
   try {
     validateSignUp(req);
 
     const { firstName, lastName, email, password } = req.body;
 
-  const hashedPassword= await bcrypt.hash(password, 10)
-  console.log({hashedPassword})
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log({ hashedPassword });
 
     const newUser = new User({
       firstName,

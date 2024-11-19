@@ -83,3 +83,8 @@ API level validation
 - Test validation individually
 -  The next step is of encryption
 - install bcrypt
+
+
+- Creating login api
+- first check if user with the emailid exist.
+- if it does, check if the passwords match 
