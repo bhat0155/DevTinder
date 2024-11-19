@@ -83,8 +83,28 @@ API level validation
 - Test validation individually
 -  The next step is of encryption
 - install bcrypt
-
-
 - Creating login api
 - first check if user with the emailid exist.
 - if it does, check if the passwords match 
+
+- Authentication, JWT and cookies
+- Whenever a user logs in, a jwt is created, which is stored in a cookie and sent to the user by the server.
+- For every subsequent request by the user, the particular cookie is sent to the server, authenticated and request is fulfilled.
+
+// steps
+- create a jwt token, attach it in a cookie and send it back in response to the user.
+- make cookie with the help of express.
+- We read the cookie with the help of a cookie parser. It's a middleware just like express.json();
+- To create jwt, npm jsonwebtoken. jwt.sign and jwt.verify. Do in login api
+- validate the token in /profile api
+
+JWT tokens
+- JWT tokens are divided into 3 parts: header, payload, signature.
+
+HW
+- install cookie parser 
+- send a dummy cookie to user
+- create profile api and check if you get cookie back, res.cookie
+- In login API, create jwt token. use jsonwebtoken
+- create jwt in /login and send it in cookie
+- read cookies in profile api and find logged in user.

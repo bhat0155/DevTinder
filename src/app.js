@@ -1,27 +1,17 @@
 const express = require("express");
 const { validateSignUp } = require("./utils/validateSignUp");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 // parse postman body
 app.use(express.json());
+app.use(cookieParser());
 
 const connectDb = require("./config/database");
 const User = require("./models/user");
 const { ReturnDocument } = require("mongodb");
-
-app.get("/profile", async (req, res) => {
-  const theUser = await User.find({ lastName: req.body.lastName });
-  console.log({ theUser });
-  if (theUser.length === 0) {
-    res.status(400).send("The user does not exist");
-  }
-  try {
-    res.send(theUser);
-  } catch (err) {
-    res.send(err.message);
-  }
-});
 
 app.post("/login", async (req, res) => {
   // checking if user with email id exist
@@ -33,6 +23,9 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid email");
     }
 
+    const token = jwt.sign({ _id: user._id }, "SECRET");
+    res.cookie("token", token);
+
     const authenticatedPw = await bcrypt.compare(password, user.password);
     if (!authenticatedPw) {
       throw new Error("Invalid password");
@@ -41,6 +34,24 @@ app.post("/login", async (req, res) => {
     }
   } catch (err) {
     res.send(err.message);
+  }
+});
+
+app.get("/profile", async (req, res) => {
+  const cookie = req.cookies;
+  console.log("retrieved cookie", cookie);
+  try {
+    const decoded = jwt.verify(cookie.token, "SECRET");
+
+    const { _id } = decoded;
+    console.log({_id})
+    const theCurrentUser=await User.findOne({_id:_id});
+    console.log({theCurrentUser})
+    res.send(theCurrentUser)
+
+    console.log(_id);
+  } catch (err) {
+    res.send(err);
   }
 });
 
