@@ -1,4 +1,6 @@
 const express = require("express");
+const { validateSignUp } = require("./utils/validateSignUp");
+const bcrypt=require("bcrypt")
 
 const app = express();
 // parse postman body
@@ -22,25 +24,20 @@ app.get("/profile", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const data = {
-    firstName: "MS",
-    lastName: "Dhoni",
-    gender: "MS@003",
-  };
-  const ALLOWED_UPDATES = ["firstName", "lastName", "password", "gender", "email"];
-
-
   try {
-    console.log(req.body);
-    const user = req.body;
-   const sanitisedObj= Object.keys(req.body).every((key)=> ALLOWED_UPDATES.includes(key))
-   console.log({sanitisedObj})
-   if (!sanitisedObj){
-    throw new Error(`only "firstName", "lastName", "password", "gender", "email" can be added during signup`)
-   }
+    validateSignUp(req);
 
-    const newUser = new User(user);
+    const { firstName, lastName, email, password } = req.body;
 
+  const hashedPassword= await bcrypt.hash(password, 10)
+  console.log({hashedPassword})
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
 
     await newUser.save();
     res.send("user added successfully");

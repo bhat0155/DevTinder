@@ -72,5 +72,14 @@ API level validation
 - map through the returned object and check whether it contains email and user id.
  bool ->object.keys(data).every((l)=>allowedUpdates.includes(l))
 - if it does, throw an error
-
 - Install npm library validator
+
+
+- Never trust req.body. Always add validations
+- Encrypting the password
+- create a new validateSignUpData in utils, write logic and require it in the main app.
+- for signup, first do validation of data, then encrypt the password.
+- For validation, first check if firstname and lastname exist, then check the length, then check password and email accuracy
+- Test validation individually
+-  The next step is of encryption
+- install bcrypt

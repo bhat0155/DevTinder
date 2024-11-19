@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const validator=require("validator");
-
+const validator = require("validator");
 
 const userSchema = mongoose.Schema(
   {
@@ -17,21 +16,21 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
-      trim:true,
-      unique:true,
-      validate(value){
-        const isValidEmail= validator.isEmail(value);
-        if (!isValidEmail){
-          throw new Error("Please enter a genuine email address")
+      trim: true,
+      unique: true,
+      validate(value) {
+        const isValidEmail = validator.isEmail(value);
+        if (!isValidEmail) {
+          throw new Error("Please enter a genuine email address");
         }
-      }
+      },
     },
     age: {
       type: Number,
     },
     gender: {
       type: String,
-      required: true,
+
       validate(value) {
         if (!["male", "female", "others"].includes(value)) {
           throw new Error(
@@ -47,16 +46,16 @@ const userSchema = mongoose.Schema(
       type: [],
       default: "this is the default value of the skills",
     },
-    photoURL:{
+    photoURL: {
       type: String,
-      validate(value){
-        const isValidURL= validator.isURL(value);
-        if (!isValidURL){
-          throw new Error("Please provide a valid URL")
+      default:"https://fastly.picsum.photos/id/4/200/300.jpg?hmac=y6_DgDO4ccUuOHUJcEWirdjxlpPwMcEZo7fz1MpuaWg",
+      validate(value) {
+        const isValidURL = validator.isURL(value);
+        if (!isValidURL) {
+          throw new Error("Please provide a valid URL");
         }
-      }
-
-    }
+      },
+    },
   },
   { timestamps: true }
 );
