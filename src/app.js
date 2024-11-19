@@ -3,6 +3,7 @@ const { validateSignUp } = require("./utils/validateSignUp");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 
 const app = express();
 // parse postman body
@@ -11,7 +12,6 @@ app.use(cookieParser());
 
 const connectDb = require("./config/database");
 const User = require("./models/user");
-const { ReturnDocument } = require("mongodb");
 
 app.post("/login", async (req, res) => {
   // checking if user with email id exist
@@ -23,7 +23,9 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid email");
     }
 
-    const token = jwt.sign({ _id: user._id }, "SECRET");
+    const token = jwt.sign({ _id: user._id }, "SECRET",{
+        expiresIn:"1d"
+    });
     res.cookie("token", token);
 
     const authenticatedPw = await bcrypt.compare(password, user.password);
@@ -37,23 +39,22 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
-  const cookie = req.cookies;
-  console.log("retrieved cookie", cookie);
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const decoded = jwt.verify(cookie.token, "SECRET");
+    const theCurrentUser = req.user;
 
-    const { _id } = decoded;
-    console.log({_id})
-    const theCurrentUser=await User.findOne({_id:_id});
-    console.log({theCurrentUser})
-    res.send(theCurrentUser)
+    res.send(theCurrentUser);
 
     console.log(_id);
   } catch (err) {
     res.send(err);
   }
 });
+
+app.post("/connectionRequest", userAuth, (req, res)=>{
+    const user=req.user;
+    res.send(user.firstName+" just sent the connection request")
+})
 
 app.post("/signup", async (req, res) => {
   try {
@@ -90,6 +91,7 @@ app.delete("/delete", async (req, res) => {
     console.log(err);
   }
 });
+
 
 app.patch("/update/:id", async (req, res) => {
   const { id } = req.params;

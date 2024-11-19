@@ -1,21 +1,28 @@
-const adminAuth = (req, res, next) => {
-  const token = "abc";
-  const authenticated = token === "abc";
-  if (authenticated) {
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+
+const userAuth = async (req, res, next) => {
+  // read cookies
+  // find token
+  // find the user
+
+  try {
+    const { token } = req.cookies;
+    if (!token) {
+      throw new Error("the token is not valid");
+    }
+    const decodedToken = jwt.verify(token, "SECRET");
+
+    const { _id } = decodedToken;
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    req.user = user;
     next();
-  } else {
-    res.status(401).send("admin not authenticated");
+  } catch (err) {
+    res.status(400).send("this is from auth middleware " + err.message);
   }
 };
 
-const userAuth = (req, res, next) => {
-  const token = "abc";
-  const authenticated = token === "abc";
-  if (authenticated) {
-    next();
-  } else {
-    res.status(401).send("user not authenticated");
-  }
-};
-
-module.exports = { userAuth, adminAuth };
+module.exports = { userAuth };

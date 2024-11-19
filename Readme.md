@@ -108,3 +108,12 @@ HW
 - In login API, create jwt token. use jsonwebtoken
 - create jwt in /login and send it in cookie
 - read cookies in profile api and find logged in user.
+
+- Auth Middleware
+- We create auth middleware because we want all the apis to be secure
+- read the cookies
+- find the token
+- find the user
+- attach the user in the request, which will be transferred by next();
+
+- Expiring the JWT token
