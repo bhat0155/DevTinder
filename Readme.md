@@ -51,3 +51,26 @@ it will match with everything and everyone.
 
 - Diving Into the APIs
 - app.use(()=> this will run on every request)
+
+- Data sanitisation and schema validation.
+- We can make changes to schema such as unique, required, default
+- the validate function in schema will only be applicable when we create something new and not on already created.
+- do make it work on already created, we need to enable it.
+- We do so by by using runvalidators in update api
+- we know lowercase, trim, min, max, minlength, max length, validate functions, skills array
+
+
+HW
+- Explore schematype options
+- add a new types of validations, req, default etc, create custom validate function for gender
+- modify each field in schema
+- add timestamps
+
+API level validation
+- For patch and signup, add allowed updates, put everything except email and user id.
+- Take the userid through params
+- map through the returned object and check whether it contains email and user id.
+ bool ->object.keys(data).every((l)=>allowedUpdates.includes(l))
+- if it does, throw an error
+
+- Install npm library validator

@@ -6,6 +6,7 @@ app.use(express.json());
 
 const connectDb = require("./config/database");
 const User = require("./models/user");
+const { ReturnDocument } = require("mongodb");
 
 app.get("/profile", async (req, res) => {
   const theUser = await User.find({ lastName: req.body.lastName });
@@ -24,13 +25,22 @@ app.post("/signup", async (req, res) => {
   const data = {
     firstName: "MS",
     lastName: "Dhoni",
-    password: "MS@003",
+    gender: "MS@003",
   };
+  const ALLOWED_UPDATES = ["firstName", "lastName", "password", "gender", "email"];
+
 
   try {
     console.log(req.body);
     const user = req.body;
+   const sanitisedObj= Object.keys(req.body).every((key)=> ALLOWED_UPDATES.includes(key))
+   console.log({sanitisedObj})
+   if (!sanitisedObj){
+    throw new Error(`only "firstName", "lastName", "password", "gender", "email" can be added during signup`)
+   }
+
     const newUser = new User(user);
+
 
     await newUser.save();
     res.send("user added successfully");
@@ -52,16 +62,26 @@ app.delete("/delete", async (req, res) => {
   }
 });
 
-app.patch("/update", async (req, res) => {
-  const whomToUpdate = await User.findByIdAndUpdate(req.body.id, req.body);
-
-  console.log(req.body);
-  if (!whomToUpdate) {
-    res.send("the user does not exist");
-  }
+app.patch("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const ALLOWED_UPDATES = ["firstName", "lastName", "gender", "photoURL"];
 
   try {
-    await whomToUpdate.save();
+    const updatedChanges = Object.keys(req.body).every((key) =>
+      ALLOWED_UPDATES.includes(key)
+    );
+
+    const whomToUpdate = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedChanges) {
+      throw new Error("Only firstName, lastName, gender can be changed");
+    }
+    if (!whomToUpdate) {
+      res.send("the user does not exist");
+    }
+
     if (whomToUpdate.length == 0) {
       console.log("no updated user");
     }
