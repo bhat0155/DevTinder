@@ -2,7 +2,7 @@ const express = require("express");
 const authRouter = express.Router();
 const User = require("../models/user");
 const { userAuth } = require("../middlewares/auth");
-const { validateSignUp } = require("../utils/validateSignUp");
+const { validateSignUp } = require("../utils/validate");
 const bcrypt = require("bcrypt");
 
 authRouter.post("/login", async (req, res) => {
@@ -19,11 +19,12 @@ authRouter.post("/login", async (req, res) => {
     res.cookie("token", token);
 
     const authenticatedPw = await user.comparePassword(password);
+    console.log({authenticatedPw})
     // const authenticatedPw = await bcrypt.compare(password, user.password);
     if (!authenticatedPw) {
       throw new Error("Invalid password");
     } else {
-      res.send("login successfull");
+      res.send("login successfull");  
     }
   } catch (err) {
     res.send(err.message);
@@ -51,6 +52,15 @@ authRouter.post("/signup", async (req, res) => {
   } catch (err) {
     res.send(err.message);
   }
+});
+
+authRouter.post("/logout", userAuth, (req, res) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+  });
+  const user = req.user;
+  console.log(user);
+  res.send(`${user.firstName} successfully signed out`);
 });
 
 module.exports = authRouter;

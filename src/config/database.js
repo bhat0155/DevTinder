@@ -7,3 +7,5 @@ const connectDb = async () => {
 };
 
 module.exports = connectDb;
+
+// mongodb+srv://EkamSingh:Ekamsingh_003@cluster0.i9nvy.mongodb.net/devTinder

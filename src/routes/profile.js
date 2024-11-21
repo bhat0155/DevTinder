@@ -2,6 +2,8 @@ const express = require("express");
 const profileRouter = express.Router();
 const User = require("../models/user");
 const { userAuth } = require("../middlewares/auth");
+const { validateProfileEdit, validatePassword } = require("../utils/validate");
+const bcrypt=require("bcrypt")
 
 profileRouter.get("/profile", userAuth, async (req, res) => {
   try {
@@ -15,55 +17,42 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.post("/update/:id", async (req, res) => {
-  const { id } = req.params;
-  const ALLOWED_UPDATES = ["firstName", "lastName", "gender", "photoURL"];
-
-  try {
-    const updatedChanges = Object.keys(req.body).every((key) =>
-      ALLOWED_UPDATES.includes(key)
-    );
-
-    const whomToUpdate = await User.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updatedChanges) {
-      throw new Error("Only firstName, lastName, gender can be changed");
+profileRouter.patch(
+  "/profile/edit",
+  validateProfileEdit,
+  userAuth,
+  async (req, res) => {
+    try {
+      // loop through the keys and update the new values
+      const user = req.user;
+      console.log({ user });
+      Object.keys(req.body).forEach((key) => (user[key] = req.body[key]));
+      await user.save();
+      res.send("user updated" + user);
+    } catch (err) {
+      res.send(err.message);
     }
-    if (!whomToUpdate) {
-      res.send("the user does not exist");
+  }
+);
+
+profileRouter.patch(
+  "/profile/password",
+  userAuth,
+  validatePassword,
+  async (req, res) => {
+    try {
+      const user = req.user;
+    //   user.password = req.body.password;
+    const hashedPw= await bcrypt.hash(req.body.password, 10)
+    user.password=hashedPw;
+
+      await user.save();
+      console.log({userPw: user})
+      res.send(`Password updated for ${user.firstName}`)
+    } catch (err) {
+      res.send(err.message);
     }
-
-    if (whomToUpdate.length == 0) {
-      console.log("no updated user");
-    }
-    res.send("the user is updated");
-  } catch (err) {
-    res.send(err.message);
   }
-});
-
-profileRouter.post("/replace", async (req, res) => {
-  const data = {
-    ...req.body,
-  };
-  const replaced = await User.findOneAndReplace(
-    { firstName: req.body.firstName },
-    data,
-    { new: true }
-  );
-  console.log({ replaced });
-  if (!replaced) {
-    res.send("the person could not be found");
-  }
-
-  try {
-    await replaced.save();
-    res.send("the person is replaced");
-  } catch (err) {
-    res.send(err.message);
-  }
-});
+);
 
 module.exports = profileRouter;

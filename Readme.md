@@ -178,3 +178,13 @@ Repeat
 - repeat for everything
 - import this in app.js and check on postman.
 
+## Logic for post/logout API
+- delete cookie containing jwt
+
+## make patch/profile/edit
+- create validation for login, give allowed parameter.
+- in the api, loop through keys and assign the new values to the keys.
+
+
+## make patch/profile/password
+- Make sure the new password is strong

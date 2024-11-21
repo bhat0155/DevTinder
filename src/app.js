@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const connectDb = require("./config/database");
-const User = require("./models/user");
+
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
@@ -124,27 +124,27 @@ app.use("/", requestRouter);
 //   }
 // });
 
-app.put("/replace", async (req, res) => {
-  const data = {
-    ...req.body,
-  };
-  const replaced = await User.findOneAndReplace(
-    { firstName: req.body.firstName },
-    data,
-    { new: true }
-  );
-  console.log({ replaced });
-  if (!replaced) {
-    res.send("the person could not be found");
-  }
+// app.put("/replace", async (req, res) => {
+//   const data = {
+//     ...req.body,
+//   };
+//   const replaced = await User.findOneAndReplace(
+//     { firstName: req.body.firstName },
+//     data,
+//     { new: true }
+//   );
+//   console.log({ replaced });
+//   if (!replaced) {
+//     res.send("the person could not be found");
+//   }
 
-  try {
-    await replaced.save();
-    res.send("the person is replaced");
-  } catch (err) {
-    res.send(err.message);
-  }
-});
+//   try {
+//     await replaced.save();
+//     res.send("the person is replaced");
+//   } catch (err) {
+//     res.send(err.message);
+//   }
+// });
 
 connectDb()
   .then(() => {
