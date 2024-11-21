@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt=require("bcrypt")
 
 const userSchema = mongoose.Schema(
   {
@@ -48,7 +50,8 @@ const userSchema = mongoose.Schema(
     },
     photoURL: {
       type: String,
-      default:"https://fastly.picsum.photos/id/4/200/300.jpg?hmac=y6_DgDO4ccUuOHUJcEWirdjxlpPwMcEZo7fz1MpuaWg",
+      default:
+        "https://fastly.picsum.photos/id/4/200/300.jpg?hmac=y6_DgDO4ccUuOHUJcEWirdjxlpPwMcEZo7fz1MpuaWg",
       validate(value) {
         const isValidURL = validator.isURL(value);
         if (!isValidURL) {
@@ -59,6 +62,20 @@ const userSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.methods.getJWT =  function () {
+  const user = this;
+  const token =  jwt.sign({ _id: user._id }, "SECRET", {
+    expiresIn: "1d",
+  });
+  return token;
+};
+
+userSchema.methods.comparePassword = async function (password) {
+  const user = this;
+  const authenticatedPw = await bcrypt.compare(password, user.password);
+  return authenticatedPw;
+};
 
 // creating a model, which is basically a class
 const User = mongoose.model("User", userSchema);

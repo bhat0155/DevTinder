@@ -116,4 +116,65 @@ HW
 - find the user
 - attach the user in the request, which will be transferred by next();
 
-- Expiring the JWT token
+- helper functions in schema
+- create userSchema.methods.getJWT
+
+
+The list of APIs to make
+AUthROuter
+- POST/signup
+- POST/login
+- POST/logout
+
+ProfileROuter
+- GET /profile/view
+- PATCH /profile/edit
+- PATCH /profile/password
+
+
+// us swiping
+COnnectionRequestRouter
+- POST request/send/interested/:userID
+- POST request/send/ignored/:userID
+- POST request/review/accepted/:userID
+- POST request/review/rejected/:userID
+
+
+userRouter
+- GET connections
+- GET requests/recieved
+- GET feed -gets you all the fields
+
+status- ignore, interested , accepted, rejected 
+
+
+Repeat
+## authRouter
+- POST /signup
+- POST /login
+
+## Profile Router
+- GET /profile
+- POST profile/edit
+- POST profile/password
+
+## connectionRequest
+- POST connectionRequest/send/interested/:userID
+- POST connectionRequest/send/ignored/:userID
+- POST connectionRequest/receive/accepted/:userID
+- POST connectionRequest/receive/rejected/:userID
+
+## user
+- GET /connections
+- GET requests/recieved
+- GET /feed
+
+- creates routes folder
+- create auth.js
+- const authRouter=express.Router()
+- use authROuter same as app.get, app.post etc
+- modules.export authRouter
+
+- repeat for everything
+- import this in app.js and check on postman.
+
