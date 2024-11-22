@@ -134,9 +134,9 @@ ProfileROuter
 
 // us swiping
 COnnectionRequestRouter
-- POST request/send/interested/:userID
+- POST request/send/interested/:userID we are interested
 - POST request/send/ignored/:userID
-- POST request/review/accepted/:userID
+- POST request/review/accepted/:userID were we accepted
 - POST request/review/rejected/:userID
 
 
@@ -159,8 +159,10 @@ Repeat
 - POST profile/password
 
 ## connectionRequest
-- POST connectionRequest/send/interested/:userID
 - POST connectionRequest/send/ignored/:userID
+- POST connectionRequest/send/interested/:userID
+or we can do connectionRequest/send/:status/:userID
+
 - POST connectionRequest/receive/accepted/:userID
 - POST connectionRequest/receive/rejected/:userID
 
@@ -188,3 +190,32 @@ Repeat
 
 ## make patch/profile/password
 - Make sure the new password is strong
+
+# ConnectionRequest
+- create a new schema specifically for connection request
+- In the connection Schema, we would have  fields: toUserId and fromUserID, string as enum which would have an array of accepted values,
+enum:{
+    values:[],
+    message:""
+}
+- add timestamps
+- Both of them would have type as mongoose.schema.types.ObjectId
+
+- POST connectionRequest/send/interested/:userID
+- Here we would be the From user ID and the person we are interested in to user id.
+- We would assign fromUserID= req.user._id (auth will attach us)
+- toUserID will come from our params
+- here the status is interested
+
+use common api
+create new instance of new schema, add req fields and save
+- check the statuses, firstly, onlu interested and ignored should be allowed
+- secondly, avoid duplicate requests and if I sent req to someone, that person should
+not be able to send the req back to me.
+- make sure toUserID Exist in our database
+- a person cannot send req to themselves
+- connectionRequest.pre will be called anytime a request is saved in the DB.
+- do connectionRequest.fromUserId.equals(connectionRequest.toUserId)
+
+- we create indexes to improve the efficiency.
+- Basically, mongoose will seperate the indexes while finding something.
