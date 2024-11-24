@@ -219,3 +219,47 @@ not be able to send the req back to me.
 
 - we create indexes to improve the efficiency.
 - Basically, mongoose will seperate the indexes while finding something.
+
+
+The review API
+- We can either accept or reject the connection request
+- POST connectionRequest/receive/accepted/:userID
+- POST connectionRequest/receive/rejected/:userID
+
+- POST connectionRequest/receive/status/:userID
+- Make the call in connectionRequestRouter
+- get loggedInUser from req.user.
+- Reciever should be the same person as logged in user
+- Make sure the status in interested
+- validate status and request id
+
+- request id is the id of document in mongoose where one person has sent the request to other.
+DRY RUN
+
+- first we check if status is valid - allowed in accepted or rejected.
+- Then we check if connection request is valid we can do it in findone
+- then we findOne, where _id is connection request id,
+- Make sure loggedInuser=req.user
+- toUserId= loggedInUserID
+- status is interested
+- if we successfully find that, we modify the status to accepted and rejected
+
+## userRouterApi
+- get/user/connections
+- get /user/requests
+- get /user/feed
+
+- for post api, sanitisation is very imp because changes will be made in db.
+- for get api, we have to make sure, we are only sending the allowed data.
+
+# to do
+- create a new userRouter, import it in the main file
+- get all the pending connection request from /user/request/received- the status should be pending.
+- Once we get the data, we only get userid, but we also want to know about whom that userid belongs to.
+- to do so, we need to create a "ref" at from user id and attach users to it.
+- it creates a bridge between the 2 schemas
+- to display infor, in validUser, do populate("fromuserid", [fields])
+
+# Making connections API
+- the status should be accepted 
+- the logged in user must be either from FromUserId or toUserID
