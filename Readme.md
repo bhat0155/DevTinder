@@ -254,7 +254,7 @@ DRY RUN
 
 # to do
 - create a new userRouter, import it in the main file
-- get all the pending connection request from /user/request/received- the status should be pending.
+- get all the pending connection request from /n- the status should be pending.
 - Once we get the data, we only get userid, but we also want to know about whom that userid belongs to.
 - to do so, we need to create a "ref" at from user id and attach users to it.
 - it creates a bridge between the 2 schemas
@@ -263,3 +263,31 @@ DRY RUN
 # Making connections API
 - the status should be accepted 
 - the logged in user must be either from FromUserId or toUserID
+
+# Making feed API
+- Logged in user must see cards whom he has not sent request to. (interested or ignored)
+- approach filter array where status != interested/ignored or status does not exist
+- or if userID exist in connections, do not show
+
+- user should see everyone except:
+- himself
+- people he has sent request to.
+    - includes people who accepted him
+    - people he sent interested to
+    - people who rejected him or he rejected
+
+- find one and do fromuserid and touserid to himself . use.select to get only 2 fields.
+- use DS set which avoids duplication. add fromuserid and touserid. save id in string format.
+- hideprople=foreach((item)=> set.add(item.fromid)). do same for touserid. 
+- the result will be array whose cards we dont wanna see 
+- now find all people hose id is not in didepeople
+- _id: nin and arrayfrom(hidepeople)
+- ne: loggedInuserid
+- 
+
+
+
+- /:id params
+- ?id query
+
+- to use pagination, mongodb gives us skip() and limit();
