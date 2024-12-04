@@ -24,17 +24,21 @@ const validateProfileEdit = (req, res, next) => {
   const ALLOWED_UPDATES = [
     "firstName",
     "lastName",
-    "email",
+    "emailId",
+    "photoURL",
+    "gender",
+    "age",
     "about",
-    "hobbies",
+    "skills",
   ];
 
   const validUpdates = Object.keys(req.body).every((key) =>
     ALLOWED_UPDATES.includes(key)
   );
+  console.log({validUpdates})
   if (!validUpdates) {
     throw new Error(
-      "you are only allowed to modify name, email , about and hobbies"
+      "you are only allowed to modify FirstName, LastName, gender, emailId, photoURL, gender, age, about, skills"
     );
   }
   next();

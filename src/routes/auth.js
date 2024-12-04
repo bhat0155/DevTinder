@@ -19,15 +19,15 @@ authRouter.post("/login", async (req, res) => {
     res.cookie("token", token);
 
     const authenticatedPw = await user.comparePassword(password);
-    console.log({authenticatedPw})
+    console.log({ authenticatedPw });
     // const authenticatedPw = await bcrypt.compare(password, user.password);
     if (!authenticatedPw) {
       throw new Error("Invalid password");
     } else {
-      res.send("login successfull");  
+      res.send(user);
     }
   } catch (err) {
-    res.send(err.message);
+    res.status(401).send(err.message);
   }
 });
 
@@ -47,8 +47,12 @@ authRouter.post("/signup", async (req, res) => {
       password: hashedPassword,
     });
 
-    await newUser.save();
-    res.send("user added successfully");
+
+    const savedUser = await newUser.save();
+
+    const token = await savedUser.getJWT();
+    res.cookie("token", token);
+    res.json({ message: "User successfully saved", data: savedUser });
   } catch (err) {
     res.send(err.message);
   }

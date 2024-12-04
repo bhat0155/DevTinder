@@ -15,7 +15,7 @@ userRouter.get("/user/request/received", userAuth, async (req, res) => {
         toUserId: loggedInUser._id,
         status: "interested",
       })
-      .populate("fromUserId", ["firstName", "lastName"]);
+      .populate("fromUserId", ["firstName", "lastName", "photoURL", "skills"]);
 
     res.json({
       message: "data fetched successfully",
@@ -59,7 +59,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
     res.json({
       message: `showing all your ${validRequest.length} connections`,
-      esb: data,
+      data: data,
     });
   } catch (err) {
     res.send(err.message);

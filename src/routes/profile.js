@@ -11,9 +11,9 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
 
     res.send(theCurrentUser);
 
-    console.log(_id);
+    // console.log(_id);
   } catch (err) {
-    res.send(err);
+    res.status(401).send(`error in profile: ${err}`);
   }
 });
 
@@ -28,9 +28,14 @@ profileRouter.patch(
       console.log({ user });
       Object.keys(req.body).forEach((key) => (user[key] = req.body[key]));
       await user.save();
-      res.send("user updated" + user);
+      // res.json({data:user});
+
+    res.json({
+      message: `${user.firstName}, your profile updated successfuly`,
+      data: user,
+    });
     } catch (err) {
-      res.send(err.message);
+      res.status(400).send(err.message);
     }
   }
 );
