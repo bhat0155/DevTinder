@@ -291,3 +291,12 @@ DRY RUN
 - ?id query
 
 - to use pagination, mongodb gives us skip() and limit();
+
+Deployment
+- open the server (paste the SSH url from aws connect)
+- cd devTinder
+- npm install to download dependency
+- to make changes display on server, do git pull and git log
+- npm run start is used to start server in production
+- enable the port 3000 on the aws instance
+- 
