@@ -328,4 +328,4 @@ Deployment
 - verify domain name
 - verify email address
 - install Amazon SDK - v3
-- set up ses client configeration
+- set up
