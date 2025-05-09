@@ -14,7 +14,7 @@ const userAuth = async (req, res, next) => {
     if (!token) {
       throw new Error("the token is not valid from the cookies");
     }
-    const decodedToken = jwt.verify(token, "SECRET");
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     const { _id } = decodedToken;
     const user = await User.findById(_id);

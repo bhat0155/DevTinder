@@ -1,4 +1,6 @@
 const express = require("express");
+require("dotenv").config();
+console.log("we are in app.js");
 
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -8,10 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({
-  origin: "http://localhost:5173", // Frontend's URL
-  credentials: true, // Allow credentials (cookies)
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Frontend's URL
+    credentials: true, // Allow credentials (cookies)
+  })
+);
 
 const connectDb = require("./config/database");
 
@@ -29,7 +33,7 @@ connectDb()
   .then(() => {
     console.log("database connected");
     app.listen(3000, () => {
-      console.log("server running on port 3000");
+      console.log("Local server running on port 3000");
     });
   })
   .catch((err) => {
