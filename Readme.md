@@ -299,4 +299,33 @@ Deployment
 - to make changes display on server, do git pull and git log
 - npm run start is used to start server in production
 - enable the port 3000 on the aws instance
-- 
+- install pm2
+- do npm start via pm2
+-  pm2 start npm -- start
+- debug logs = pm2 logs
+- pm2 list, pm2 flush <process name>, pm2 stop <process name>, pm2 delete <process name>
+- to stop process =  pm2 stop nmp (process name)
+- pm2 delete npm (to delete the process)
+- to change name = pm2 start npm --name "devTinder-backend" -- start
+
+- frontend = http://3.142.174.157
+- backend = http://3.142.174.157:3000/feed
+
+- first we need to map the ip with domain name
+- then for backend, we want it to run line namasteDev/api instead of namasteDev:3000/api
+- We do this with tthe help of nginx proxy pass
+- Make changes to nginx config
+- Take config from chat gpt and make changes in nginx
+- sudo nano /etc/nginx/sites-available/default
+- changes server_name to ip
+- add rule from gpt
+- restart nginx - sudo systemctl restart nginx
+- modify FE base url
+
+# Sending Email via SES
+- create IAM user
+- Give access to AmazonSESFullAccess
+- verify domain name
+- verify email address
+- install Amazon SDK - v3
+- set up ses client configeration
