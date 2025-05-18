@@ -329,3 +329,7 @@ Deployment
 - verify email address
 - install Amazon SDK - v3
 - set up
+
+# Payment Integration
+- Create a payment route
+- 
