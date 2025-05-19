@@ -19,7 +19,6 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     // return back order details to FE
     console.log(paymentIntent);
 
-
     const payment = new Payments({
       stripePaymentIntendId: paymentIntent.id,
       amount: paymentIntent.amount,
@@ -32,9 +31,9 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     const savedPayment = await payment.save();
     // changing the payment status
 
-    const paymentInfo = await Payments.findById(savedPayment._id)
-    paymentInfo.status = "payment is done"
-    console.log({paymentInfo});
+    const paymentInfo = await Payments.findById(savedPayment._id);
+    paymentInfo.status = "payment is done";
+    console.log({ paymentInfo });
     await paymentInfo.save();
 
     // changing the user to premium
@@ -42,14 +41,22 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     specificUser.isPremium = true;
     await specificUser.save();
 
-
     res.send({
       ...savedPayment.toJSON(),
-      clientSecret: paymentIntent.client_secret
+      clientSecret: paymentIntent.client_secret,
     });
   } catch (err) {
     console.log(err);
   }
+});
+
+paymentRouter.get("/payment/verify", userAuth, async (req, res) => {
+    const user = req.user.toJSON();
+    if (user.isPremium){
+        res.json({isPremium: true})
+    }else{
+        res.json({isPremium: false})
+    }
 });
 
 module.exports = paymentRouter;
