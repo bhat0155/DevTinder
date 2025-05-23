@@ -1,11 +1,17 @@
 const express = require("express");
+const app = express();
+
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const http = require("http");
+const initializeSocket = require("./utils/socket.js");
+const server = http.createServer(app);
 
-require("./utils/cronJob")
+initializeSocket(server);
 
-const app = express();
+require("./utils/cronJob");
+
 // parse postman body
 app.use(express.json());
 app.use(cookieParser());
@@ -23,7 +29,7 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
-const paymentRouter  = require("./routes/payment")
+const paymentRouter = require("./routes/payment");
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
@@ -34,7 +40,7 @@ app.use("/", paymentRouter);
 connectDb()
   .then(() => {
     console.log("database connected");
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log("Local server running on port 3000");
     });
   })

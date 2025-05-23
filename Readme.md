@@ -332,4 +332,8 @@ Deployment
 
 # Payment Integration
 - Create a payment route
-- 
+
+# socket integration
+- in app.js, import http
+- create a server - const server = http.Createserver(app)
+- server.listen - port
