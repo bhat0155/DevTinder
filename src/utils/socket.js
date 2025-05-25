@@ -1,6 +1,5 @@
 const socket = require("socket.io");
 const { Chat } = require("../models/chat");
-const { use } = require("react");
 const { text } = require("express");
 
 const initializeSocket = (server) => {
